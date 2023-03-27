@@ -1,10 +1,14 @@
 from django.contrib import admin
 
-from .models import CapDoSanPham, KhuVuc, LoaiHang, LoaiSanPham, Mo
+from .models.san_pham import CapDoSanPham, KhuVuc, LoaiHang, LoaiSanPham, Mo
 
 # Register your models here.
-admin.site.register([KhuVuc, LoaiHang, LoaiSanPham, CapDoSanPham, Mo])
+admin.site.register([KhuVuc, LoaiSanPham, CapDoSanPham, Mo])
 
+class LoaiHangAdmin(admin.ModelAdmin):
+    list_filter = ["ma_san_pham", "ma_cap_do"]
+
+admin.site.register(LoaiHang, LoaiHangAdmin)
 
 admin.site.site_header = "Hạc Cảnh Viên"
 admin.site.site_title = "Hệ thống quản lí Hạc Cảnh Viên"
