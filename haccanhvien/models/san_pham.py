@@ -23,6 +23,22 @@ class CapDoSanPham(models.Model):
     ten_cap_do = models.CharField("Tên cấp độ", name="ten_cap_do", max_length=256, null=True, blank=True)
     mieu_ta = models.TextField("Miêu tả", name="mieu ta")
 
+    def save(self, *args, **kwargs) -> None:
+        """Override the save method to update the foreign key value when it is changed
+        """
+        # Get the old object before saving the changes
+        try:
+            old_obj = CapDoSanPham.objects.get(pk=self.pk)
+        except CapDoSanPham.DoesNotExist:
+            old_obj = None
+
+        # Call the original save method
+        super().save(*args, **kwargs)
+
+        # Update the foreign key in the related model
+        if old_obj and old_obj.ma_cap_do != self.ma_cap_do:
+            LoaiHang.objects.filter(ma_cap_do=old_obj.ma_cap_do).update(ma_cap_do=self.ma_cap_do)
+
     def __str__(self) -> str:
         return self.ma_cap_do
 
@@ -37,6 +53,8 @@ class LoaiSanPham(models.Model):
     mieu_ta = models.TextField("Miêu tả", name="mieu_ta")
 
     def save(self, *args, **kwargs) -> None:
+        """Override the save method to update the foreign key value when it is changed
+        """
         # Get the old object before saving the changes
         try:
             old_obj = LoaiSanPham.objects.get(pk=self.pk)
