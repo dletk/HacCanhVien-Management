@@ -1,9 +1,11 @@
 from django.contrib import admin
 
+from .models.dich_vu import DichVu, LoaiDichVu, ThanhPhanDichVu
 from .models.san_pham import CapDoSanPham, KhuVuc, LoaiHang, LoaiSanPham, Mo
 
 # Register your models here.
 admin.site.register([KhuVuc, LoaiSanPham, CapDoSanPham, Mo])
+admin.site.register([LoaiDichVu, DichVu, ThanhPhanDichVu])
 
 class LoaiHangAdmin(admin.ModelAdmin):
     list_filter = ["ma_san_pham", "ma_cap_do"]
