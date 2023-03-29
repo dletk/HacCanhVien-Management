@@ -1,19 +1,6 @@
 from django.db import models
 
 
-class ThanhPhanDichVu(models.Model):
-    ten_thanh_phan = models.CharField(verbose_name="Tên thành phần", name="ten_thanh_phan", unique=True, max_length=256)
-    ma_thanh_phan = models.CharField(verbose_name="Mã thành phần", name="ma_thanh_phan", unique=True, max_length=256)
-    mieu_ta = models.TextField(verbose_name="Miêu tả", name="mieu_ta", blank=True, null=True)
-
-    class Meta:
-        verbose_name = "Thành phần Dịch vụ"
-        verbose_name_plural = "Thành phần Dịch vụ"
-
-    def __str__(self) -> str:
-        return self.ten_thanh_phan
-
-
 class LoaiDichVu(models.Model):
     ten_loai_dich_vu = models.CharField("Loại dịch vụ", name="ten_loai_dich_vu", unique=True, max_length=256)
     ma_loai_dich_vu = models.CharField("Mã loại dịch vụ", name="ma_loai_dich_vu", unique=True, max_length=256)
@@ -42,6 +29,24 @@ class LoaiDichVu(models.Model):
         if old_obj and old_obj.ma_loai_dich_vu != self.ma_loai_dich_vu:
             DichVu.objects.filter(ma_loai_dich_vu=old_obj.ma_loai_dich_vu).update(
                 ma_loai_dich_vu=self.ma_loai_dich_vu)
+            LoaiDichVu.objects.filter(ma_loai_dich_vu=old_obj.ma_loai_dich_vu).update(
+                ma_loai_dich_vu=self.ma_loai_dich_vu
+            )
+
+
+class ThanhPhanDichVu(models.Model):
+    ten_thanh_phan = models.CharField(verbose_name="Tên thành phần", name="ten_thanh_phan", unique=True, max_length=256)
+    ma_thanh_phan = models.CharField(verbose_name="Mã thành phần", name="ma_thanh_phan", unique=True, max_length=256)
+    ma_loai_dich_vu = models.ForeignKey(LoaiDichVu, on_delete=models.CASCADE,
+                                        verbose_name="Mã loại dịch vụ", to_field="ma_loai_dich_vu")
+    mieu_ta = models.TextField(verbose_name="Miêu tả", name="mieu_ta", blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Thành phần Dịch vụ"
+        verbose_name_plural = "Thành phần Dịch vụ"
+
+    def __str__(self) -> str:
+        return self.ten_thanh_phan
 
 
 class DichVu(models.Model):
