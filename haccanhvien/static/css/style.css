@@ -1,0 +1,13 @@
+.rectangle {
+    display: inline-block;
+    border: 1px solid black;
+    height: 50px;
+}
+
+.rectangle.hd-tc {
+    width: 15px;
+}
+
+.rectangle.dnm-ta-vipsao {
+    width: 30px;
+}
