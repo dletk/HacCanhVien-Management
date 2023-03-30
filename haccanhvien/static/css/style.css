@@ -11,3 +11,11 @@
 .rectangle.dnm-ta-vipsao {
     width: 30px;
 }
+
+#info-dialog {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 8px;
+    z-index: 100;
+}

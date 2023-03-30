@@ -106,3 +106,26 @@ class Mo(models.Model):
 
     def __str__(self) -> str:
         return f"{self.ma_hang} | Khu: {self.ma_khu_vuc} | Hàng: {self.hang} | Cột: {self.cot}"
+
+
+class TinhTrangMo(models.Model):
+    tinh_trang_mo = models.CharField(verbose_name="Tình trạng mộ", name="tinh_trang_mo", unique=True)
+
+    def __str__(self) -> str:
+        return self.tinh_trang_mo
+
+    def save(self, *args, **kwargs) -> None:
+        """Override the save method to update the foreign key value when it is changed
+        """
+        # Get the old object before saving the changes
+        try:
+            old_obj = TinhTrangMo.objects.get(pk=self.pk)
+        except TinhTrangMo.DoesNotExist:
+            old_obj = None
+
+        # Call the original save method
+        super().save(*args, **kwargs)
+
+        # Update the foreign key in the related model
+        if old_obj and old_obj.tinh_trang_mo != self.tinh_trang_mo:
+            Mo.objects.filter(tinh_trang_mo=old_obj.tinh_trang_mo).update(tinh_trang_mo=self.tinh_trang_mo)
