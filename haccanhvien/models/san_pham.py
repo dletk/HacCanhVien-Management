@@ -92,27 +92,17 @@ class LoaiHang(models.Model):
         return f"{self.ten_ma_hang}"
 
 
-class Mo(models.Model):
-    ma_khu_vuc = models.ForeignKey(KhuVuc, on_delete=models.RESTRICT, verbose_name="Mã khu vực", to_field="ma_khu_vuc")
-    ma_hang = models.ForeignKey(LoaiHang, on_delete=models.RESTRICT, verbose_name="Loại hàng", to_field="ma_hang")
-    hang = models.IntegerField(verbose_name="Vị trí hàng", name="hang")
-    cot = models.IntegerField(verbose_name="Vị trí cột", name="cot")
-    ma_mo = models.CharField("Mã mộ", name="ma_mo", max_length=256, blank=True, null=True)
+class TinhTrangMo(models.Model):
+    loai_tinh_trang = models.CharField(verbose_name="Loại tình trạng",
+                                       name="loai_tinh_trang", max_length=256, unique=True)
+    ma_tinh_trang = models.CharField(verbose_name="Mã tình trạng", name="ma_tinh_trang", max_length=256, unique=True)
 
     class Meta:
-        unique_together = ["hang", "cot", "ma_khu_vuc"]
-        verbose_name = "Phần mộ"
-        verbose_name_plural = "Phần mộ"
+        verbose_name = "Tình trạng mộ"
+        verbose_name_plural = "Tình trạng mộ"
 
     def __str__(self) -> str:
-        return f"{self.ma_hang} | Khu: {self.ma_khu_vuc} | Hàng: {self.hang} | Cột: {self.cot}"
-
-
-class TinhTrangMo(models.Model):
-    tinh_trang_mo = models.CharField(verbose_name="Tình trạng mộ", name="tinh_trang_mo", unique=True)
-
-    def __str__(self) -> str:
-        return self.tinh_trang_mo
+        return self.loai_tinh_trang
 
     def save(self, *args, **kwargs) -> None:
         """Override the save method to update the foreign key value when it is changed
@@ -127,5 +117,23 @@ class TinhTrangMo(models.Model):
         super().save(*args, **kwargs)
 
         # Update the foreign key in the related model
-        if old_obj and old_obj.tinh_trang_mo != self.tinh_trang_mo:
-            Mo.objects.filter(tinh_trang_mo=old_obj.tinh_trang_mo).update(tinh_trang_mo=self.tinh_trang_mo)
+        if old_obj and old_obj.ma_tinh_trang != self.ma_tinh_trang:
+            Mo.objects.filter(tinh_trang_mo=old_obj.ma_tinh_trang).update(tinh_trang_mo=self.ma_tinh_trang)
+
+
+class Mo(models.Model):
+    ma_khu_vuc = models.ForeignKey(KhuVuc, on_delete=models.RESTRICT, verbose_name="Mã khu vực", to_field="ma_khu_vuc")
+    ma_hang = models.ForeignKey(LoaiHang, on_delete=models.RESTRICT, verbose_name="Loại hàng", to_field="ma_hang")
+    hang = models.IntegerField(verbose_name="Vị trí hàng", name="hang")
+    cot = models.IntegerField(verbose_name="Vị trí cột", name="cot")
+    ma_mo = models.CharField("Mã mộ", name="ma_mo", max_length=256, blank=True, null=True)
+    tinh_trang_mo = models.ForeignKey(TinhTrangMo, on_delete=models.RESTRICT,
+                                      verbose_name="Tình trạng mộ", to_field="ma_tinh_trang")
+
+    class Meta:
+        unique_together = ["hang", "cot", "ma_khu_vuc"]
+        verbose_name = "Phần mộ"
+        verbose_name_plural = "Phần mộ"
+
+    def __str__(self) -> str:
+        return f"{self.ma_hang} | Khu: {self.ma_khu_vuc} | Hàng: {self.hang} | Cột: {self.cot}"

@@ -5,7 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
   rectangles.forEach((rectangle) => {
     rectangle.addEventListener("click", (event) => {
       const info = event.target.dataset.info;
-      infoDialog.innerHTML = info;
+      const status = event.target.dataset.status;
+      infoDialog.innerHTML = info + "-" + status;
 
       const rectPosition = event.target.getBoundingClientRect();
       infoDialog.style.left = `${rectPosition.left}px`;

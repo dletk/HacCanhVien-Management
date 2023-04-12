@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
 
 from .models.dich_vu import DichVu, LoaiDichVu, ThanhPhanDichVu
-from .models.san_pham import CapDoSanPham, KhuVuc, LoaiHang, LoaiSanPham, Mo
+from .models.san_pham import (CapDoSanPham, KhuVuc, LoaiHang, LoaiSanPham, Mo,
+                              TinhTrangMo)
 
 
 class SanPhamAdminSite(AdminSite):
@@ -21,13 +22,13 @@ dich_vu_adminsite = DichVuAdminSite(name="dichvuAdmin")
 san_pham_adminsite = SanPhamAdminSite(name="sanphamAdmin")
 
 # Register your models here.
-san_pham_adminsite.register([KhuVuc, LoaiSanPham, CapDoSanPham, Mo])
+san_pham_adminsite.register([KhuVuc, LoaiSanPham, CapDoSanPham, Mo, TinhTrangMo])
 san_pham_adminsite.register(LoaiHang, LoaiHangAdmin)
 
 dich_vu_adminsite.register([LoaiDichVu, DichVu, ThanhPhanDichVu])
 
 
-admin.site.register([KhuVuc, LoaiSanPham, CapDoSanPham, Mo])
+admin.site.register([KhuVuc, LoaiSanPham, CapDoSanPham, Mo, TinhTrangMo])
 admin.site.register(LoaiHang, LoaiHangAdmin)
 admin.site.register([LoaiDichVu, DichVu, ThanhPhanDichVu])
 
