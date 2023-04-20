@@ -29,9 +29,6 @@ class LoaiDichVu(models.Model):
         if old_obj and old_obj.ma_loai_dich_vu != self.ma_loai_dich_vu:
             DichVu.objects.filter(ma_loai_dich_vu=old_obj.ma_loai_dich_vu).update(
                 ma_loai_dich_vu=self.ma_loai_dich_vu)
-            LoaiDichVu.objects.filter(ma_loai_dich_vu=old_obj.ma_loai_dich_vu).update(
-                ma_loai_dich_vu=self.ma_loai_dich_vu
-            )
 
 
 class ThanhPhanDichVu(models.Model):
