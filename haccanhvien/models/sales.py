@@ -22,6 +22,10 @@ class DonHang(models.Model):
     gia_tri_don_hang = models.BigIntegerField(verbose_name="Giá trị đơn hàng", blank=False)
     trang_thai = models.CharField(verbose_name="Trạng thái", max_length=256, choices=TRANG_THAI, blank=False)
 
+    class Meta:
+        verbose_name = "Đơn hàng"
+        verbose_name_plural = "Đơn hàng"
+
 
 class GiayChungNhan(models.Model):
 
@@ -35,3 +39,7 @@ class GiayChungNhan(models.Model):
     ma_don_hang = models.ForeignKey(DonHang, on_delete=models.RESTRICT, blank=False)
     trang_thai = models.CharField(verbose_name="Trạng thái", max_length=256,
                                   choices=TRANG_THAI, blank=False, default=DANG_CHO)
+
+    class Meta:
+        verbose_name = "Giấy chứng nhận"
+        verbose_name_plural = "Giấy chứng nhận"
