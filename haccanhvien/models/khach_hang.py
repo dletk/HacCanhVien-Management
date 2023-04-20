@@ -16,7 +16,7 @@ class KhachMat(models.Model):
     ten_khach = models.CharField(verbose_name="Tên khách", name="ten_khach", blank=False, max_length=256)
     ngay_mat = models.DateField(verbose_name="Ngày mất", name="ngay_mat", blank=False)
     mo = models.ForeignKey(Mo, verbose_name="Mộ chôn", blank=False, on_delete=models.CASCADE)
-    thong_tin_khac = models.TextField(verbose_name="Ngày mất")
+    thong_tin_khac = models.TextField(verbose_name="Thông tin khác")
 
 
 class KyUc(models.Model):
