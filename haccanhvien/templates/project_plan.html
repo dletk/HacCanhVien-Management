@@ -1,21 +1,31 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Quy hoạch dự án{% endblock %}
 {% block extrahead %}<script src="{% static 'js/script.js' %}" defer></script>{% endblock %}
 
 {% block content %}
 <div id="info-dialog" style="display:none; position:absolute;"></div>
-<div style="position: relative;">
-    {% for hang, cot, obj in grouped_objects %}
-    <!-- <p>Hang: {{ hang }} - Cot: {{ cot }} - Object: {{ obj }} - Ma_hang: {{ obj.ma_hang }}</p> -->
-    <div class="rectangle {% if obj.ma_hang.ma_hang == 'DNM-TA-VIP*' %}dnm-ta-vipsao{% else %}hd-tc{% endif %} {% if obj.tinh_trang_mo.ma_tinh_trang == 'DB' %}da_ban{% elif obj.tinh_trang_mo.ma_tinh_trang == 'DSD' %}da_su_dung{% else %}con_trong{% endif %}"
-        style="position: absolute; left: {% if obj.ma_hang.ma_hang == 'DNM-TA-VIP*' %}{% widthratio cot 1 50 %}{% else %}{% widthratio cot 1 30 %}{% endif %}px; top: {% widthratio hang 1 60 %}px;"
-        data-info="{{ obj }}"
-        data-status="{{ obj.tinh_trang_mo }}">
-        <!-- {{ obj }} -->
-        <!-- Hello -->
+<div class="containter">
+    <div class="row">
+        <div class="col-8">
+            <div style="position: relative;">
+                {% for hang, cot, obj in grouped_objects %}
+                <!-- <p>Hang: {{ hang }} - Cot: {{ cot }} - Object: {{ obj }} - Ma_hang: {{ obj.ma_hang }}</p> -->
+                <div class="rectangle {% if obj.ma_hang.ma_hang == 'DNM-TA-VIP*' %}dnm-ta-vipsao{% else %}hd-tc{% endif %} {% if obj.tinh_trang_mo.ma_tinh_trang == 'DB' %}da_ban{% elif obj.tinh_trang_mo.ma_tinh_trang == 'DSD' %}da_su_dung{% else %}con_trong{% endif %}"
+                    style="position: absolute; left: {% if obj.ma_hang.ma_hang == 'DNM-TA-VIP*' %}{% widthratio cot 1 50 %}{% else %}{% widthratio cot 1 30 %}{% endif %}px; top: {% widthratio hang 1 60 %}px;"
+                    data-info="{{ obj }}"
+                    data-status="{{ obj.tinh_trang_mo }}">
+                    <!-- {{ obj }} -->
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="container">
+                {% block side_info %}
+                {% endblock %}
+            </div>
+        </div>
     </div>
-    {% endfor %}
 </div>
 {% endblock %}

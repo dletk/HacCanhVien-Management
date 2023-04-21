@@ -1,0 +1,25 @@
+{% extends "project_plan.html" %}
+{% load static %}
+
+{% block title %}Bán Hàng{% endblock %}
+{% block heading %}Trang bán hàng{% endblock %}
+
+{% block side_info %}
+<h2>Danh sách các loại sản phẩm</h2>
+<div class="accordion" id="danh_sach_ma_san_pham">
+    {% for ma_san_pham in all_ma_san_pham %}
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ ma_san_pham.ma_san_pham }}"
+                    aria-expanded="true" aria-controls="collapse{{ ma_san_pham.ma_san_pham }}">
+                    {{ ma_san_pham.ten_san_pham }}
+                </button>
+            </h2>
+            <div id="collapse{{ ma_san_pham.ma_san_pham }}" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    {{ ma_san_pham.mieu_ta }}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
