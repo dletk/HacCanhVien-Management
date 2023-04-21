@@ -26,6 +26,20 @@ class DonHang(models.Model):
         verbose_name = "Đơn hàng"
         verbose_name_plural = "Đơn hàng"
 
+    def save(self, *args, **kwargs) -> None:
+        """Override the save method to create a new Giay Chung Nhan when Dong Hang is Hoan tat
+        """
+        # Call the original save method
+        super().save(*args, **kwargs)
+
+        # Create a new instance of Giay Chung Nhan for this Don Hang, NOTE: This is for demo purpose, this logic
+        # should come from the UI for easy changes later
+        if self.trang_thai == self.HOAN_TAT:
+            GiayChungNhan.objects.get_or_create(don_hang=self)
+
+    def __str__(self) -> str:
+        return f"Đơn hàng cho Mộ: {self.mo.ma_mo}"
+
 
 class GiayChungNhan(models.Model):
 
@@ -36,10 +50,13 @@ class GiayChungNhan(models.Model):
         (HOAN_TAT, "Hoàn tất")
     ]
 
-    ma_don_hang = models.ForeignKey(DonHang, on_delete=models.RESTRICT, blank=False)
+    don_hang = models.OneToOneField(DonHang, on_delete=models.RESTRICT, blank=False)
     trang_thai = models.CharField(verbose_name="Trạng thái", max_length=256,
                                   choices=TRANG_THAI, blank=False, default=DANG_CHO)
 
     class Meta:
         verbose_name = "Giấy chứng nhận"
         verbose_name_plural = "Giấy chứng nhận"
+
+    def __str__(self) -> str:
+        return f"Giấy chứng nhận cho Mộ: {self.don_hang.mo.ma_mo}"
