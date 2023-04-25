@@ -20,14 +20,18 @@
     z-index: 100;
 }
 
-.rectangle.con_trong {
+.rectangle.CT {
     background-color: green;
 }
 
-.rectangle.da_ban {
+.rectangle.DB {
     background-color: lightcoral;
 }
 
-.rectangle.da_su_dung {
+.rectangle.DSD {
     background-color: grey;
+}
+
+.rectangle.DGD {
+    background-color: aqua;
 }

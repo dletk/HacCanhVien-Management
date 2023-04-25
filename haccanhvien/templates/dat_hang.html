@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Tạo đơn hàng{% endblock %}
+
+{% block content %}
+    <h1>Create Customer and Order</h1>
+    <select id="customer_type" name="customer_type">
+        <option value="">--Please choose an option--</option>
+        <option value="new">New Customer</option>
+        <option value="existing">Existing Customer</option>
+    </select>
+
+    <form id="main_form" method="POST" action="">
+        {% csrf_token %}
+        <div id="new_customer" style="display:none;">
+            <h2>New Customer</h2>
+            {{ khach_mua_form }}
+        </div>
+        <div id="existing_customer" style="display:none;">
+            <h2>Existing Customer</h2>
+            <select id="existing_customer_select" name="existing_customer_select">
+                <option value="">--Please choose a customer--</option>
+                {% for customer in customers %}
+                    <option value="{{ customer.pk }}">{{ customer }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <h2>Order Information</h2>
+            {{ donhang_form }}
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    <script src="{% static 'js/order_script.js' %}"></script>
+{% endblock %}

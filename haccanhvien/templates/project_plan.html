@@ -11,10 +11,11 @@
             <div style="position: relative;">
                 {% for hang, cot, obj in grouped_objects %}
                 <!-- <p>Hang: {{ hang }} - Cot: {{ cot }} - Object: {{ obj }} - Ma_hang: {{ obj.ma_hang }}</p> -->
-                <div class="rectangle {% if obj.ma_hang.ma_hang == 'DNM-TA-VIP*' %}dnm-ta-vipsao{% else %}hd-tc{% endif %} {% if obj.tinh_trang_mo.ma_tinh_trang == 'DB' %}da_ban{% elif obj.tinh_trang_mo.ma_tinh_trang == 'DSD' %}da_su_dung{% else %}con_trong{% endif %}"
+                <div class="rectangle {% if obj.ma_hang.ma_hang == 'DNM-TA-VIP*' %}dnm-ta-vipsao{% else %}hd-tc{% endif %} {{obj.tinh_trang_mo.ma_tinh_trang}}"
                     style="position: absolute; left: {% if obj.ma_hang.ma_hang == 'DNM-TA-VIP*' %}{% widthratio cot 1 50 %}{% else %}{% widthratio cot 1 30 %}{% endif %}px; top: {% widthratio hang 1 60 %}px;"
                     data-info="{{ obj }}"
-                    data-status="{{ obj.tinh_trang_mo }}">
+                    data-status="{{ obj.tinh_trang_mo }}"
+                    data-statuscode="{{ obj.tinh_trang_mo.ma_tinh_trang }}">
                     <!-- {{ obj }} -->
                 </div>
                 {% endfor %}
