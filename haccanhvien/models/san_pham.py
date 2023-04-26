@@ -93,8 +93,8 @@ class LoaiHang(models.Model):
 
 
 class TinhTrangMo(models.Model):
-    loai_tinh_trang = models.CharField(verbose_name="Loại tình trạng",
-                                       name="loai_tinh_trang", max_length=256, unique=True)
+    ten_tinh_trang = models.CharField(verbose_name="Tên tình trạng",
+                                      name="ten_tinh_trang", max_length=256, unique=True)
     ma_tinh_trang = models.CharField(verbose_name="Mã tình trạng", name="ma_tinh_trang", max_length=256, unique=True)
 
     class Meta:
@@ -102,7 +102,7 @@ class TinhTrangMo(models.Model):
         verbose_name_plural = "Tình trạng mộ"
 
     def __str__(self) -> str:
-        return self.loai_tinh_trang
+        return self.ten_tinh_trang
 
     def save(self, *args, **kwargs) -> None:
         """Override the save method to update the foreign key value when it is changed

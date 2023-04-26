@@ -2,7 +2,7 @@ from django.db import models
 
 from .dich_vu import DichVu
 from .khach_hang import KhachMua
-from .san_pham import Mo
+from .san_pham import Mo, TinhTrangMo
 
 
 class DonHang(models.Model):
@@ -32,6 +32,13 @@ class DonHang(models.Model):
         # Call the original save method
         super().save(*args, **kwargs)
 
+        # Marked the Mo associated with the new don hang as Dang Giao Dich if it is Con Trong
+        if self.trang_thai == self.DANG_CHO:
+            tinh_trang = self.mo.tinh_trang_mo
+            if tinh_trang == TinhTrangMo.objects.get(ma_tinh_trang="CT"):
+                self.mo.tinh_trang_mo = TinhTrangMo.objects.get(ma_tinh_trang="DGD")
+                self.mo.save()
+
         # Create a new instance of Giay Chung Nhan for this Don Hang, NOTE: This is for demo purpose, this logic
         # should come from the UI for easy changes later
         if self.trang_thai == self.HOAN_TAT:
@@ -57,6 +64,19 @@ class GiayChungNhan(models.Model):
     class Meta:
         verbose_name = "Giấy chứng nhận"
         verbose_name_plural = "Giấy chứng nhận"
+
+    def save(self, *args, **kwargs) -> None:
+        """Override the save method to marked the associated Mo as Da Ban when Giay Chung Nhan is Hoan Tat
+        """
+        # Call the original save method
+        super().save(*args, **kwargs)
+
+        if self.trang_thai == self.HOAN_TAT:
+            mo = self.don_hang.mo
+            tinh_trang_da_ban = TinhTrangMo.objects.get(ma_tinh_trang="DB")
+            if mo.tinh_trang_mo != tinh_trang_da_ban:
+                mo.tinh_trang_mo = tinh_trang_da_ban
+                mo.save()
 
     def __str__(self) -> str:
         return f"Giấy chứng nhận cho Mộ: {self.don_hang.mo.ma_mo}"
