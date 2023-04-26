@@ -46,7 +46,7 @@ def order(request, customer_id=None):
                 donhang.save()
                 danh_sach_dich_vu = donhang_form.cleaned_data["danh_sach_dich_vu"]
                 donhang.danh_sach_dich_vu.set(danh_sach_dich_vu)
-                return redirect("existing_customer_order")  # Redirect to the same page to avoid resubmitting the form
+                return redirect("order")  # Redirect to the same page to avoid resubmitting the form
         else:
             # Handle creating a new customer and order
             khach_mua_form = KhachMuaForm(request.POST, prefix="khachhang")
@@ -57,7 +57,9 @@ def order(request, customer_id=None):
                 donhang = donhang_form.save(commit=False)
                 donhang.khach_mua = khachhang
                 donhang.save()
-                return redirect("new_customer_order")  # Redirect to the same page to avoid resubmitting the form
+                danh_sach_dich_vu = donhang_form.cleaned_data["danh_sach_dich_vu"]
+                donhang.danh_sach_dich_vu.set(danh_sach_dich_vu)
+                return redirect("order")  # Redirect to the same page to avoid resubmitting the form
     else:
         khach_mua_form = KhachMuaForm(prefix="khachhang")
         donhang_form = DonHangForm(prefix="donhang")
