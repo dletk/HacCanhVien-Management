@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log(statusCode);
       if (statusCode == "CT") {
         infoDialog.innerHTML +=
-          "<br /><a href='/dat-hang' class='btn btn-primary'>Mua hàng</a>";
+          "<br /><a href='/haccanhvien/order' class='btn btn-primary'>Mua hàng</a>";
       }
 
       const rectPosition = event.target.getBoundingClientRect();
