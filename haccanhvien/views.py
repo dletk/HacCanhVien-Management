@@ -4,11 +4,14 @@ from django.shortcuts import redirect, render
 
 from .forms import DonHangForm, KhachMuaForm
 from .models.khach_hang import KhachMua
+from .models.sales import DonHang
 from .models.san_pham import LoaiSanPham, Mo
 
 
-def get_all_mo_in_grouped_objects():
-    all_mo = Mo.objects.all()
+def get_all_mo_in_grouped_objects(filter_dict=None):
+    if filter_dict is None:
+        filter_dict = {}
+    all_mo = Mo.objects.filter(**filter_dict)
 
     grouped_objects = []
 
@@ -34,7 +37,7 @@ def ban_hang(request):
     return render(request, "thong_tin_du_an.html", context)
 
 
-def order(request, customer_id=None):
+def order(request, customer_id=None, mo_id=None):
     if request.method == "POST":
         if customer_id:
             # Handle creating a new order for the existing customer
@@ -66,3 +69,10 @@ def order(request, customer_id=None):
 
     customers = KhachMua.objects.all()
     return render(request, "dat_hang.html", {"khach_mua_form": khach_mua_form, "donhang_form": donhang_form, "customers": customers})
+
+
+def quan_li_don_hang_dang_cho(request, don_hang_id=None):
+    # if request.method == "GET":
+    context = get_all_mo_in_grouped_objects()
+    context["all_don_hang"] = DonHang.objects.filter(trang_thai=DonHang.DANG_CHO)
+    return render(request, "quan_li_don_hang.html", context)

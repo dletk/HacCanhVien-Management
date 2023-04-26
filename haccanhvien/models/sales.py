@@ -33,15 +33,16 @@ class DonHang(models.Model):
         super().save(*args, **kwargs)
 
         # Marked the Mo associated with the new don hang as Dang Giao Dich if it is Con Trong
+        dang_giao_dich = TinhTrangMo.objects.get(ma_tinh_trang="DGD")
         if self.trang_thai == self.DANG_CHO:
             tinh_trang = self.mo.tinh_trang_mo
             if tinh_trang == TinhTrangMo.objects.get(ma_tinh_trang="CT"):
-                self.mo.tinh_trang_mo = TinhTrangMo.objects.get(ma_tinh_trang="DGD")
+                self.mo.tinh_trang_mo = dang_giao_dich
                 self.mo.save()
 
         # Create a new instance of Giay Chung Nhan for this Don Hang, NOTE: This is for demo purpose, this logic
         # should come from the UI for easy changes later
-        if self.trang_thai == self.HOAN_TAT:
+        if self.trang_thai == self.HOAN_TAT and self.mo.tinh_trang_mo == dang_giao_dich:
             GiayChungNhan.objects.get_or_create(don_hang=self)
 
     def __str__(self) -> str:

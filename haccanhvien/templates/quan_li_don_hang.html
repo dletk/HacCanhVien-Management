@@ -1,0 +1,30 @@
+{% extends "project_plan.html" %}
+{% load static %}
+
+{% block title %}Thông tin dự án{% endblock %}
+{% block heading %}Trang thông tin tổng quan dự án{% endblock %}
+
+{% block side_info %}
+<h2>Danh sách Đơn hàng đang chờ xử lí</h2>
+<div class="accordion" id="danh_sach_don_hang">
+    {% for don_hang in all_don_hang %}
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse{{ don_hang.ma_don_hang }}" aria-expanded="true"
+                aria-controls="collapse{{ don_hang.ma_don_hang }}">
+                {{ don_hang }}
+            </button>
+        </h2>
+        <div id="collapse{{ don_hang.ma_don_hang }}" class="accordion-collapse collapse hide">
+            <div class="accordion-body">
+                <p>Tên khách hàng: {{ don_hang.khach_mua }}</p>
+                <p>Mộ: {{ don_hang.mo }}</p>
+                <p>Ngày giao dịch: {{ don_hang.ngay_giao_dich }}</p>
+                <p>Danh sách dịch vụ: {{ don_hang.danh_sach_dich_vu.all|join:", " }}</p>
+                <p>Giá trị đơn hàng: {{ don_hang.gia_tri_don_hang }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}
