@@ -71,8 +71,23 @@ def order(request, customer_id=None, mo_id=None):
     return render(request, "dat_hang.html", {"khach_mua_form": khach_mua_form, "donhang_form": donhang_form, "customers": customers})
 
 
-def quan_li_don_hang_dang_cho(request, don_hang_id=None):
-    # if request.method == "GET":
-    context = get_all_mo_in_grouped_objects()
-    context["all_don_hang"] = DonHang.objects.filter(trang_thai=DonHang.DANG_CHO)
-    return render(request, "quan_li_don_hang.html", context)
+def quan_li_don_hang_dang(request, ma_don_hang=None, trang_thai=None):
+    if request.method == "GET":
+        context = get_all_mo_in_grouped_objects()
+        context["all_don_hang"] = {
+            "don_hang_dang_giao_dich": DonHang.objects.filter(trang_thai=DonHang.DANG_CHO),
+            "don_hang_da_hoan_tat": DonHang.objects.filter(trang_thai=DonHang.HOAN_TAT)
+        }
+        return render(request, "quan_li_don_hang.html", context)
+    elif request.method == "POST":
+        if ma_don_hang and trang_thai:
+            don_hang = DonHang.objects.get(ma_don_hang=ma_don_hang)
+            valid_trang_thai = [choice[0] for choice in DonHang.TRANG_THAI]
+
+            if trang_thai not in valid_trang_thai:
+                return f"Error, cannot set trang thai of Don hang to {trang_thai}"
+
+            don_hang.trang_thai = trang_thai
+            don_hang.save()
+
+            return redirect("quan_li_don_hang")
