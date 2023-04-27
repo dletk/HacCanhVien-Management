@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const info = event.target.dataset.info;
       const status = event.target.dataset.status;
       const statusCode = event.target.dataset.statuscode;
+      const moid = event.target.dataset.moid;
       infoDialog.innerHTML = info + "-" + status;
 
       // Create a button to make an order if the status is con_trong
@@ -14,6 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (statusCode == "CT") {
         infoDialog.innerHTML +=
           "<br /><a href='/haccanhvien/order' class='btn btn-primary'>Mua hàng</a>";
+      } else if (statusCode == "DB") {
+        infoDialog.innerHTML += `<br /><a href='/haccanhvien/thong-tin-nguoi-mat/add/${moid}' class='btn btn-warning'>Thêm thông tin người mất</a>`;
       }
 
       const rectPosition = event.target.getBoundingClientRect();

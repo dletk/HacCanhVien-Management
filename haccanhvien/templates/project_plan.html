@@ -15,7 +15,8 @@
                     style="position: absolute; left: {% if obj.ma_hang.ma_hang == 'DNM-TA-VIP*' %}{% widthratio cot 1 50 %}{% else %}{% widthratio cot 1 30 %}{% endif %}px; top: {% widthratio hang 1 60 %}px;"
                     data-info="{{ obj }}"
                     data-status="{{ obj.tinh_trang_mo }}"
-                    data-statuscode="{{ obj.tinh_trang_mo.ma_tinh_trang }}">
+                    data-statuscode="{{ obj.tinh_trang_mo.ma_tinh_trang }}"
+                    data-moid="{{ obj.pk }}">
                     <!-- {{ obj }} -->
                 </div>
                 {% endfor %}
