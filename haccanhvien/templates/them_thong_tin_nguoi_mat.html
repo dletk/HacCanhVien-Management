@@ -6,7 +6,7 @@
 {% block content %}
 <div class="container">
     <h1>Thông tin người mất</h1>
-    <form id="main_form" method="POST" action="">
+    <form id="main_form" method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}
         {{ khach_mat_form.as_div }}
         <div>

@@ -1,11 +1,12 @@
 
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
 from .forms import DonHangForm, KhachMatForm, KhachMuaForm
 from .models.dich_vu import DichVu
-from .models.khach_hang import KhachMat, KhachMua
+from .models.khach_hang import AnhKyUc, KhachMat, KhachMua, KyUc
 from .models.sales import DonHang, GiayChungNhan
 from .models.san_pham import LoaiSanPham, Mo, TinhTrangMo
 
@@ -100,15 +101,26 @@ def quan_li_don_hang(request, ma_don_hang=None, trang_thai=None):
 @require_http_methods(["GET", "POST"])
 def add_nguoi_mat(request, moid: int):
     if request.method == "GET":
-        khach_mat_form = KhachMatForm()
+        khach_mat_form = KhachMatForm(prefix="khachmat")
         return render(request, "them_thong_tin_nguoi_mat.html", {"khach_mat_form": khach_mat_form})
     else:
-        khach_mat_form = KhachMatForm(request.POST)
+        khach_mat_form = KhachMatForm(request.POST, prefix="khachmat")
         if khach_mat_form.is_valid():
             mo = Mo.objects.get(pk=moid)
             khach_mat = khach_mat_form.save(commit=False)
             khach_mat.mo = mo
             khach_mat.save()
+
+            if "file-upload" in request.FILES:
+                ky_uc = KyUc(khach_hang=khach_mat)
+                ky_uc.save()
+                files = request.FILES.getlist('file-upload')
+                for f in files:
+                    # Save the uploaded file
+                    img = SimpleUploadedFile(f.name, f.read())
+                    anh_ky_uc = AnhKyUc(ma_ky_uc=ky_uc, image=img)
+                    anh_ky_uc.save()
+
             return redirect("so-do-du-an")
 
 

@@ -5,19 +5,25 @@
 
 {% block content %}
 <div class="container">
-    <h1>Thông tin người mất {{ mo }}</h1>
+    <h1>Thông tin người mất</h1>
+    <h2>{{ mo }}</h2>
     <ul class="list-group">
         {% for khach_hang in cac_khach_mat %}
         <li class="list-group-item">
             <div class="container">
-                <p>Tên khách hàng: {{ khach_hang.ten_khach }}</p>
+                <h2>Tên khách hàng: {{ khach_hang.ten_khach }}</h2>
                 <p>Ngày mất: {{ khach_hang.ngay_mat }}</p>
                 {% if khach_hang.kyuc %}
-                    <div id="carouselExample" class="carousel slide" style="background-color: grey;">
+                    <h2>Miền ký ức</h2>
+                    <div id="carouselExample" class="carousel slide" style="background-color: grey; height: 800px;">
                         <div class="carousel-inner">
                             {% for anh_ky_uc in khach_hang.kyuc.anhkyuc_set.all %}
+                            {% if forloop.first %}
                             <div class="carousel-item active">
-                                <img src="{{ anh_ky_uc.image.url }}" class="d-block mx-auto" alt="...">
+                            {% else %}
+                            <div class="carousel-item">
+                            {% endif %}
+                                <img src="{{ anh_ky_uc.image.url }}" class="d-block mx-auto img-fluid" alt="..." style="object-fit: cover; height: 800px;">
                             </div>
                             {% endfor %}
                         </div>
