@@ -18,4 +18,6 @@ urlpatterns = [
     path("quan-li-giay-chung-nhan/", views.quan_li_giay_chung_nhan, name="quan_li_giay_chung_nhan"),
     path("quan-li-giay-chung-nhan/<int:giay_chung_nhan_id>/<slug:trang_thai>",
          views.quan_li_giay_chung_nhan, name="doi_trang_thai_giay_chung_nhan"),
+    path('thong-ke/<slug:from_date>/<slug:to_date>', views.thong_ke_don_hang, name='thong_ke'),
+    path('thong-ke/', views.thong_ke_don_hang, name='xem_thong_ke'),
 ]

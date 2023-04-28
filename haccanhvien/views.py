@@ -1,5 +1,9 @@
 
+from collections import defaultdict
+from datetime import datetime
+
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
@@ -162,3 +166,31 @@ def quan_li_giay_chung_nhan(request, giay_chung_nhan_id=None, trang_thai=None):
                 mo.save()
 
             return redirect("quan_li_giay_chung_nhan")
+
+
+def thong_ke_don_hang(request, from_date=None, to_date=None):
+    # Parse the dates from string to datetime objects
+    from_date_obj = datetime.strptime(from_date, '%Y-%m-%d')
+    to_date_obj = datetime.strptime(to_date, '%Y-%m-%d')
+
+    # Query the 'DonHang' model instances within the date range
+    dach_sach_don_hang = DonHang.objects.filter(
+        Q(ngay_giao_dich__gte=from_date_obj) & Q(ngay_giao_dich__lte=to_date_obj)
+    )
+
+    # perform some simple stats
+    total_value = 0
+    dich_vu_count = defaultdict(int)
+    for donhang in dach_sach_don_hang:
+        total_value += int(donhang.gia_tri_don_hang)
+        for dich_vu in donhang.danh_sach_dich_vu.all():
+            dich_vu_count[dich_vu] += 1
+
+    context = {
+        "dich_vu_count": dict(dich_vu_count),
+        "total_value": total_value,
+        "from_date": from_date_obj.strftime("%d-%m-%Y"),
+        "to_date": to_date_obj.strftime("%d-%m-%Y")
+    }
+
+    return render(request, "thong_ke_don_hang.html", context)

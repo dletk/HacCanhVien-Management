@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Thông tin người mất{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Xem thống kê đơn hàng</h1>
+    <form method="get" action="">
+        <label for="from_date">Từ ngày:</label>
+        <input type="date" id="from_date" name="from_date" required>
+
+        <label for="to_date">Đến ngày:</label>
+        <input type="date" id="to_date" name="to_date" required>
+
+        <button type="submit">Thống kê</button>
+    </form>
+
+    <div style="margin-top: 50px;">
+        <h2>
+            Thống kê từ ngày: {{ from_date }} đến ngày {{ to_date }}
+        </h2>
+        <br/>
+        {% if total_value %}
+        <h2>
+            Tổng giá trị đơn hàng: {{ total_value|intcomma }} VND
+        </h2>
+        {% endif %}
+        <h2>
+            Thống kê số đơn hàng của mỗi dịch vụ
+        </h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tên dịch vụ</th>
+                    <th>Số lượng đơn hàng</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dich_vu, count in dich_vu_count.items %}
+                <tr>
+                    <td>{{ dich_vu }}</td>
+                    <td>{{ count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    const form = document.querySelector('form');
+        const from_date_input = document.querySelector('#from_date');
+        const to_date_input = document.querySelector('#to_date');
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const from_date_value = from_date_input.value;
+            const to_date_value = to_date_input.value;
+            const action_url = `/haccanhvien/thong-ke/${from_date_value}/${to_date_value}`;
+            form.action = action_url;
+            form.submit();
+        });
+</script>
+{% endblock %}
