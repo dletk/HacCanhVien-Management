@@ -1,8 +1,9 @@
 
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.views.decorators.http import require_http_methods
 
-from .forms import DonHangForm, KhachMuaForm
+from .forms import DonHangForm, KhachMatForm, KhachMuaForm
 from .models.khach_hang import KhachMua
 from .models.sales import DonHang
 from .models.san_pham import LoaiSanPham, Mo
@@ -70,8 +71,8 @@ def order(request, customer_id=None, mo_id=None):
     customers = KhachMua.objects.all()
     return render(request, "dat_hang.html", {"khach_mua_form": khach_mua_form, "donhang_form": donhang_form, "customers": customers})
 
-
-def quan_li_don_hang_dang(request, ma_don_hang=None, trang_thai=None):
+@require_http_methods(["GET", "POST"])
+def quan_li_don_hang(request, ma_don_hang=None, trang_thai=None):
     if request.method == "GET":
         context = get_all_mo_in_grouped_objects()
         context["all_don_hang"] = {
@@ -91,3 +92,17 @@ def quan_li_don_hang_dang(request, ma_don_hang=None, trang_thai=None):
             don_hang.save()
 
             return redirect("quan_li_don_hang")
+
+@require_http_methods(["GET", "POST"])
+def add_nguoi_mat(request, moid: int):
+    if request.method == "GET":
+        khach_mat_form = KhachMatForm()
+        return render(request, "thong_tin_nguoi_mat.html", {"khach_mat_form": khach_mat_form})
+    else:
+        khach_mat_form = KhachMatForm(request.POST)
+        if khach_mat_form.is_valid():
+            mo = Mo.objects.get(pk=moid)
+            khach_mat = khach_mat_form.save(commit=False)
+            khach_mat.mo = mo
+            khach_mat.save()
+            return redirect("so-do-du-an")

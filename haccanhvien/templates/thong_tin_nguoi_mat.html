@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Thông tin người mất{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Thông tin người mất</h1>
+    <form id="main_form" method="POST" action="">
+        {% csrf_token %}
+        {{ khach_mat_form.as_div }}
+        <button type="submit" class="btn btn-warning">Nhập thông tin</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.db import models
 
-from .san_pham import Mo
+from .san_pham import Mo, TinhTrangMo
 
 
 class KhachMua(models.Model):
@@ -31,6 +31,14 @@ class KhachMat(models.Model):
 
     def __str__(self) -> str:
         return f"{self.ten_khach} - Ngày mất: {self.ngay_mat}"
+
+    def save(self, *args, **kwargs) -> None:
+        super().save(*args, **kwargs)
+
+        # Change the status of Mo to DaSuDung
+        if self.mo.tinh_trang_mo.ma_tinh_trang != "DSD":
+            self.mo.tinh_trang_mo = TinhTrangMo.objects.get(ma_tinh_trang="DSD")
+        self.mo.save()
 
 
 class KyUc(models.Model):
