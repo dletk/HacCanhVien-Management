@@ -12,11 +12,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Create a button to make an order if the status is con_trong
       console.log(statusCode);
+      const button_mua_hang =
+        "<a href='/haccanhvien/order' class='btn btn-primary'>Mua dịch vụ</a>";
+      const button_them_thong_tin_nguoi_mat = `<a href='/haccanhvien/thong-tin-nguoi-mat/add/${moid}' class='btn btn-warning'>Thêm thông tin người mất</a>`;
+      const button_thong_tin_nguoi_mat = `<a href='/haccanhvien/thong-tin-nguoi-mat/${moid}' class='btn btn-info'>Thông tin người mất</a>`;
+
       if (statusCode == "CT") {
         infoDialog.innerHTML +=
-          "<br /><a href='/haccanhvien/order' class='btn btn-primary'>Mua hàng</a>";
+          "<br /><a href='/haccanhvien/order' class='btn btn-primary'>Mua dịch vụ</a>";
       } else if (statusCode == "DB") {
-        infoDialog.innerHTML += `<br /><a href='/haccanhvien/thong-tin-nguoi-mat/add/${moid}' class='btn btn-warning'>Thêm thông tin người mất</a>`;
+        infoDialog.innerHTML += `<br/> ${button_mua_hang} ${button_them_thong_tin_nguoi_mat}`;
+      } else if (statusCode == "DSD") {
+        infoDialog.innerHTML += `<br/> ${button_mua_hang} ${button_them_thong_tin_nguoi_mat} ${button_thong_tin_nguoi_mat}`;
       }
 
       const rectPosition = event.target.getBoundingClientRect();

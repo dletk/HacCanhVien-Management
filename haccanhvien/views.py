@@ -4,9 +4,10 @@ from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
 from .forms import DonHangForm, KhachMatForm, KhachMuaForm
-from .models.khach_hang import KhachMua
-from .models.sales import DonHang
-from .models.san_pham import LoaiSanPham, Mo
+from .models.dich_vu import DichVu
+from .models.khach_hang import KhachMat, KhachMua
+from .models.sales import DonHang, GiayChungNhan
+from .models.san_pham import LoaiSanPham, Mo, TinhTrangMo
 
 
 def get_all_mo_in_grouped_objects(filter_dict=None):
@@ -38,7 +39,7 @@ def ban_hang(request):
     return render(request, "thong_tin_du_an.html", context)
 
 
-def order(request, customer_id=None, mo_id=None):
+def dat_hang(request, customer_id=None, mo_id=None):
     if request.method == "POST":
         if customer_id:
             # Handle creating a new order for the existing customer
@@ -69,7 +70,9 @@ def order(request, customer_id=None, mo_id=None):
         donhang_form = DonHangForm(prefix="donhang")
 
     customers = KhachMua.objects.all()
-    return render(request, "dat_hang.html", {"khach_mua_form": khach_mua_form, "donhang_form": donhang_form, "customers": customers})
+    all_dich_vu = DichVu.objects.all()
+    return render(request, "dat_hang.html", {"khach_mua_form": khach_mua_form, "donhang_form": donhang_form, "customers": customers, "all_dich_vu": all_dich_vu})
+
 
 @require_http_methods(["GET", "POST"])
 def quan_li_don_hang(request, ma_don_hang=None, trang_thai=None):
@@ -93,11 +96,12 @@ def quan_li_don_hang(request, ma_don_hang=None, trang_thai=None):
 
             return redirect("quan_li_don_hang")
 
+
 @require_http_methods(["GET", "POST"])
 def add_nguoi_mat(request, moid: int):
     if request.method == "GET":
         khach_mat_form = KhachMatForm()
-        return render(request, "thong_tin_nguoi_mat.html", {"khach_mat_form": khach_mat_form})
+        return render(request, "them_thong_tin_nguoi_mat.html", {"khach_mat_form": khach_mat_form})
     else:
         khach_mat_form = KhachMatForm(request.POST)
         if khach_mat_form.is_valid():
@@ -106,3 +110,43 @@ def add_nguoi_mat(request, moid: int):
             khach_mat.mo = mo
             khach_mat.save()
             return redirect("so-do-du-an")
+
+
+@require_http_methods(["GET"])
+def thong_tin_nguoi_mat(request, moid: int):
+    context = {}
+    mo = Mo.objects.get(pk=moid)
+    cac_khach_mat = KhachMat.objects.filter(mo=mo)
+
+    context["cac_khach_mat"] = cac_khach_mat
+    context["mo"] = mo
+    return render(request, "thong_tin_nguoi_mat.html", context)
+
+
+@require_http_methods(["GET", "POST"])
+def quan_li_giay_chung_nhan(request, giay_chung_nhan_id=None, trang_thai=None):
+    if request.method == "GET":
+        context = get_all_mo_in_grouped_objects()
+        context["all_giay_chung_nhan"] = {
+            "giay_chung_nhan_dang_cho": GiayChungNhan.objects.filter(trang_thai=GiayChungNhan.DANG_CHO),
+            "giay_chung_nhan_da_hoan_tat": GiayChungNhan.objects.filter(trang_thai=GiayChungNhan.HOAN_TAT)
+        }
+        return render(request, "giay_chung_nhan.html", context)
+    elif request.method == "POST":
+        if giay_chung_nhan_id and trang_thai:
+            giay_chung_nhan = GiayChungNhan.objects.get(pk=giay_chung_nhan_id)
+            valid_trang_thai = [choice[0] for choice in GiayChungNhan.TRANG_THAI]
+
+            if trang_thai not in valid_trang_thai:
+                return f"Error, cannot set trang thai of Don hang to {trang_thai}"
+
+            giay_chung_nhan.trang_thai = trang_thai
+            giay_chung_nhan.save()
+
+            # If trang thai change to DANG_CHO, the associated Mo should be marked as Dang Giao Dich, not Da Ban
+            mo = giay_chung_nhan.don_hang.mo
+            if trang_thai == "DANG_CHO" and mo.tinh_trang_mo == TinhTrangMo.objects.get(ma_tinh_trang="DB"):
+                mo.tinh_trang_mo = TinhTrangMo.objects.get(ma_tinh_trang="DGD")
+                mo.save()
+
+            return redirect("quan_li_giay_chung_nhan")

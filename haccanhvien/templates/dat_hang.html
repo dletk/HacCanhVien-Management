@@ -4,33 +4,64 @@
 {% block title %}Tạo đơn hàng{% endblock %}
 
 {% block content %}
-    <h1>Create Customer and Order</h1>
-    <select id="customer_type" name="customer_type">
-        <option value="">--Please choose an option--</option>
-        <option value="new">New Customer</option>
-        <option value="existing">Existing Customer</option>
-    </select>
+    <div class="container">
+        <div class="row">
+            <div class="col-8">
+                <h1>Tạo đơn đặt hàng mới</h1>
+                <label>Loại khách hàng</label>
+                <select id="customer_type" name="customer_type">
+                    <option value="">Vui lòng chọn loại khách hàng</option>
+                    <option value="new">Khách hàng mới</option>
+                    <option value="existing">Khách hàng cũ</option>
+                </select>
 
-    <form id="main_form" method="POST" action="">
-        {% csrf_token %}
-        <div id="new_customer" style="display:none;">
-            <h2>New Customer</h2>
-            {{ khach_mua_form }}
+                <form id="main_form" method="POST" action="">
+                    {% csrf_token %}
+                    <div id="new_customer" style="display:none;">
+                        <h2>Tạo khách hàng mới</h2>
+                        {{ khach_mua_form.as_div }}
+                    </div>
+                    <div id="existing_customer" style="display:none;">
+                        <h2>Thông tin khách hàng cũ</h2>
+                        <label>Khách hàng</label>
+                        <select id="existing_customer_select" name="existing_customer_select">
+                            <option value="">--Vui lòng chọn 1 khách hàng trong danh sách--</option>
+                            {% for customer in customers %}
+                                <option value="{{ customer.pk }}">{{ customer }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <h2>Thông tin đơn hàng</h2>
+                        {{ donhang_form.as_div }}
+                    </div>
+                    <button type="submit">Xác nhận</button>
+                </form>
+            </div>
+            <div class="col-4">
+                <h2>Miêu tả dịch vụ</h2>
+                <div class="accordion" id="danh_sach_dich_vu">
+                    {% for dich_vu in all_dich_vu %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse{{ dich_vu.ma_dich_vu }}" aria-expanded="true"
+                                aria-controls="collapse{{ dich_vu.ma_dich_vu }}">
+                                {{ dich_vu.ten_dich_vu }}
+                            </button>
+                        </h2>
+                        <div id="collapse{{ dich_vu.ma_dich_vu }}" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                <p>Loại dịch vụ: {{ dich_vu.loai_dich_vu }}</p>
+                                <p>Thành phần trong dịch vụ: {{ dich_vu.danh_sach_thanh_phan.all|join:", " }}</p>
+                                <p>Miêu tả: {{ dich_vu.mieu_ta }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-        <div id="existing_customer" style="display:none;">
-            <h2>Existing Customer</h2>
-            <select id="existing_customer_select" name="existing_customer_select">
-                <option value="">--Please choose a customer--</option>
-                {% for customer in customers %}
-                    <option value="{{ customer.pk }}">{{ customer }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div>
-            <h2>Order Information</h2>
-            {{ donhang_form }}
-        </div>
-        <button type="submit">Submit</button>
-    </form>
+    </div>
     <script src="{% static 'js/order_script.js' %}"></script>
 {% endblock %}

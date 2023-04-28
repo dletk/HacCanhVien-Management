@@ -75,7 +75,8 @@ class GiayChungNhan(models.Model):
         if self.trang_thai == self.HOAN_TAT:
             mo = self.don_hang.mo
             tinh_trang_da_ban = TinhTrangMo.objects.get(ma_tinh_trang="DB")
-            if mo.tinh_trang_mo != tinh_trang_da_ban:
+            tinh_trang_da_su_dung = TinhTrangMo.objects.get(ma_tinh_trang="DSD")
+            if mo.tinh_trang_mo not in [tinh_trang_da_ban, tinh_trang_da_su_dung]:
                 mo.tinh_trang_mo = tinh_trang_da_ban
                 mo.save()
 

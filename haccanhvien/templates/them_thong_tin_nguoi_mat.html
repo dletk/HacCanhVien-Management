@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Thông tin người mất{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Thông tin người mất</h1>
+    <form id="main_form" method="POST" action="">
+        {% csrf_token %}
+        {{ khach_mat_form.as_div }}
+        <div>
+            <label for="upload-toggle">Tải lên các ảnh kí ức?</label>
+            <input type="checkbox" id="upload-toggle" name="upload-toggle">
+        </div>
+        <div id="file-inputs" style="display: none;">
+            <label for="file-upload">Lựa chọn các file kí ức:</label>
+            <input type="file" id="file-upload" name="file-upload" multiple>
+        </div>
+        <button type="submit" class="btn btn-warning">Nhập thông tin</button>
+    </form>
+</div>
+<script>
+    const uploadToggle = document.getElementById('upload-toggle');
+    const fileInputs = document.getElementById('file-inputs');
+
+    uploadToggle.addEventListener('change', (event) => {
+        if (event.target.checked) {
+            fileInputs.style.display = 'block';
+        } else {
+            fileInputs.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}
