@@ -54,7 +54,7 @@ class KyUc(models.Model):
 
 class AnhKyUc(models.Model):
     ma_ky_uc = models.ForeignKey(KyUc, on_delete=models.CASCADE, verbose_name="Ký ức")
-    image = models.ImageField("Ảnh", name="image")
+    image = models.ImageField("Ảnh", name="image", upload_to="images/")
 
     class Meta:
         verbose_name = "Ảnh ký ức"

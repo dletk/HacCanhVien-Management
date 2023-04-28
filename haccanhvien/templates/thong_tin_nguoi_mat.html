@@ -13,9 +13,23 @@
                 <p>Tên khách hàng: {{ khach_hang.ten_khach }}</p>
                 <p>Ngày mất: {{ khach_hang.ngay_mat }}</p>
                 {% if khach_hang.kyuc %}
-                    {% for anh_ky_uc in khach_hang.kyuc.anhkyuc_set.all %}
-                        <img src="{{ anh_ky_uc.image.url }}" alt="{{ anh_ky_uc.ma_ky_uc }}" style="width:100%">
-                    {% endfor %}
+                    <div id="carouselExample" class="carousel slide" style="background-color: grey;">
+                        <div class="carousel-inner">
+                            {% for anh_ky_uc in khach_hang.kyuc.anhkyuc_set.all %}
+                            <div class="carousel-item active">
+                                <img src="{{ anh_ky_uc.image.url }}" class="d-block mx-auto" alt="...">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
                 {% endif %}
             </div>
         </li>
