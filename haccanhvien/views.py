@@ -178,6 +178,11 @@ def thong_ke_don_hang(request, from_date=None, to_date=None):
         Q(ngay_giao_dich__gte=from_date_obj) & Q(ngay_giao_dich__lte=to_date_obj)
     )
 
+    all_mo = Mo.objects.all()
+
+    total_mo = len(all_mo)
+    used_mo = len(Mo.objects.filter(tinh_trang_mo=TinhTrangMo.objects.get(ma_tinh_trang="DSD")))
+
     # perform some simple stats
     total_value = 0
     dich_vu_count = defaultdict(int)
@@ -190,7 +195,9 @@ def thong_ke_don_hang(request, from_date=None, to_date=None):
         "dich_vu_count": dict(dich_vu_count),
         "total_value": total_value,
         "from_date": from_date_obj.strftime("%d-%m-%Y"),
-        "to_date": to_date_obj.strftime("%d-%m-%Y")
+        "to_date": to_date_obj.strftime("%d-%m-%Y"),
+        "total_mo": total_mo,
+        "used_mo": used_mo
     }
 
     return render(request, "thong_ke_don_hang.html", context)
