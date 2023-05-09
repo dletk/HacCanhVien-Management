@@ -169,6 +169,9 @@ def quan_li_giay_chung_nhan(request, giay_chung_nhan_id=None, trang_thai=None):
 
 
 def thong_ke_don_hang(request, from_date=None, to_date=None):
+    if from_date is None or to_date is None:
+        return render(request, "thong_ke_don_hang.html")
+
     # Parse the dates from string to datetime objects
     from_date_obj = datetime.strptime(from_date, '%Y-%m-%d')
     to_date_obj = datetime.strptime(to_date, '%Y-%m-%d')
