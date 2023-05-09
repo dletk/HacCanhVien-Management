@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-k)ay36l5(_5ul31n_onqs@1i-t8*91^7z2(&2+qx-70#ap=#n@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["haccanhviendemo.azurewebsites.net"]
+ALLOWED_HOSTS = ["haccanhviendemo.azurewebsites.net", "*"]
 
 
 # Application definition
@@ -117,11 +117,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'haccanhvien/static/')
-]
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Base directory for all file uploads
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
